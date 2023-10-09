@@ -1,4 +1,4 @@
-package com.company;
+package com.github.ad0wski;
 
 public class Main {
 
