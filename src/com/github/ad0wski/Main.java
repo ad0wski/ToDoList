@@ -7,6 +7,7 @@ import com.github.ad0wski.priority.PriorityID;
 
 import java.sql.Connection;
 import java.time.ZonedDateTime;
+import java.util.Scanner;
 
 public class Main {
 
@@ -20,7 +21,26 @@ public class Main {
         System.out.println("4 - usuń zadanie");
 
         Connection connection = ToDoListDatabase.createConnection();
-        ToDoListDatabase.addTask(connection, 2, new Task(ZonedDateTime.parse("2023-10-11T01:00:00+01:00"), CategoryID.HOME, PriorityID.LOW, DifficultyID.EASY, "Sprzatanie"));
 
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n"); //co jest końcem łańcucha tekstowego
+        int choice = scanner.nextInt();
+        if(choice == 1){
+            ToDoListDatabase.showAllTasks(connection);
+        }else if(choice == 2){
+            System.out.println("Podaj datę zakończenia zadania: ");
+            String date = scanner.next();
+            System.out.println("Podaj kategorię zadania: ");
+            System.out.println("1. SCHOOL, 2. HOBBY, 3. HOME");
+            int category = scanner.nextInt();
+            System.out.println("Podaj skalę ważności zadania: ");
+            System.out.println("1. LOW, 2. MEDIUM, 3. HIGH");
+            int priority = scanner.nextInt();
+            System.out.println("Podaj poziom trudności: ");
+            System.out.println("1. EASY, 2. MEDIUM, 3. HARD");
+            int difficulty = scanner.nextInt();
+            System.out.println("Podaj tytuł zadania: ");
+            String title = scanner.next();
+            ToDoListDatabase.addTask(connection, 4, new Task(ZonedDateTime.parse(date + "T01:00:00+01:00"), CategoryID.values()[category-1], PriorityID.values()[priority-1], DifficultyID.values()[difficulty-1], title));
+        }
     }
 }

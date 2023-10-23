@@ -1,9 +1,10 @@
 package com.github.ad0wski;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.github.ad0wski.category.CategoryID;
+import com.github.ad0wski.difficulty.DifficultyID;
+import com.github.ad0wski.priority.PriorityID;
+
+import java.sql.*;
 
 public class ToDoListDatabase {
     public static Connection createConnection() {
@@ -33,8 +34,22 @@ public class ToDoListDatabase {
                     "VALUES (" + index + ", \'" + task.getEndDate() + "\', " + task.getCategoryID().index + ", " + task.getPriorityID().index + ", " + task.getDifficultyID().index + ", \'" + task.getTitle() + "\');";
             System.out.println(query);
             statement.executeUpdate(query);
-            connection.close();
+//            connection.close();
 
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void showAllTasks(Connection connection){
+        try{
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM ToDoList";
+            System.out.println(query);
+            ResultSet resultSet = statement.executeQuery(query);
+            while(resultSet.next()){
+                System.out.println(resultSet.getString("ID") + " " + resultSet.getString("EndDate") + " " + CategoryID.values()[Integer.parseInt(resultSet.getString("CategoryID"))-1] + " " + PriorityID.values()[Integer.parseInt(resultSet.getString("PriorityID"))-1] + " " + DifficultyID.values()[Integer.parseInt(resultSet.getString("DifficultyID"))-1] + " " + resultSet.getString("Title"));
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
