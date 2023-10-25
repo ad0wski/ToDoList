@@ -41,6 +41,21 @@ public class Main {
             System.out.println("Podaj tytuł zadania: ");
             String title = scanner.next();
             ToDoListDatabase.addTask(connection, 4, new Task(ZonedDateTime.parse(date + "T01:00:00+01:00"), CategoryID.values()[category-1], PriorityID.values()[priority-1], DifficultyID.values()[difficulty-1], title));
+        }else if(choice == 3){
+            System.out.println("Podaj index zadania do edycji: ");
+            int index = scanner.nextInt();
+            Task task = ToDoListDatabase.getSpecificTask(connection, index);
+            System.out.println(task);
+            System.out.println("Które pole chcesz edytować?: \n 1. Data zakończenia \n 2. Kategoria \n 3. Skala ważności \n 4. Poziom trudności \n 5. Tytuł");
+            choice = scanner.nextInt();
+            String newValueField;
+            if(choice == 1){
+                newValueField = scanner.next();
+                task.setEndDate(ZonedDateTime.parse(newValueField));
+                ToDoListDatabase.editTask(connection, index, task);
+            }
+        }else if(choice == 4){
+
         }
     }
 }
