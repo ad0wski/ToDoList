@@ -4,16 +4,18 @@ import com.github.ad0wski.category.CategoryID;
 import com.github.ad0wski.difficulty.DifficultyID;
 import com.github.ad0wski.priority.PriorityID;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 public class Task {
-    private ZonedDateTime endDate;
+    private LocalDate endDate;
     private CategoryID categoryID;
     private PriorityID priorityID;
     private DifficultyID difficultyID;
     private String title;
 
-    public Task(ZonedDateTime endDate, CategoryID categoryID, PriorityID priorityID, DifficultyID difficultyID, String title) {
+    public Task(LocalDate endDate, CategoryID categoryID, PriorityID priorityID, DifficultyID difficultyID, String title) {
         this.endDate = endDate;
         this.categoryID = categoryID;
         this.priorityID = priorityID;
@@ -21,11 +23,11 @@ public class Task {
         this.title = title;
     }
 
-    public ZonedDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(ZonedDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
