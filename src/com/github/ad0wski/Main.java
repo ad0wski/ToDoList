@@ -27,7 +27,9 @@ public class Main {
             System.out.println("2 - dodaj zadanie");
             System.out.println("3 - edytuj zadanie");
             System.out.println("4 - usuń zadanie");
-            System.out.println("5 - zakończ");
+            System.out.println("5 - filtruj zadania po danej kategorii");
+            System.out.println("6 - oznacz jako zrobione");
+            System.out.println("7 - zakończ");
             int choice = scanner.nextInt();
             if (choice == 1) {
                 ToDoListDatabase.showAllTasks(connection);
@@ -65,7 +67,18 @@ public class Main {
                 int index = scanner.nextInt();
                 ToDoListDatabase.removingTask(connection, index);
 
-            } else if (choice == 5) {
+            }else if(choice == 5) {
+                System.out.println("Wybierz kategorię zadań: ");
+                System.out.println("1. Szkoła \n 2. Hobby \n 3. Dom");
+                int choiceCategory = scanner.nextInt();
+                ToDoListDatabase.filterTasks(connection, choiceCategory);
+
+            }else if(choice == 6) {
+                System.out.println("Podaj index zadania, które chcesz oznaczyć jako zrealizowane: ");
+                int index = scanner.nextInt();
+                ToDoListDatabase.markAsCompleted(connection, index);
+
+            } else if (choice == 7) {
                 break;
             }
         }

@@ -5,6 +5,7 @@ import com.github.ad0wski.difficulty.DifficultyID;
 import com.github.ad0wski.priority.PriorityID;
 import jdk.jshell.Snippet;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -58,13 +59,20 @@ public class ToDoListDatabase {
             while (resultSet.next()) {
                 LocalDate taskDate = LocalDate.parse(resultSet.getString("EndDate"));
                 long diff = DAYS.between(currentDate, taskDate);
-                if(diff < 3){
-                    System.out.println(ConsoleColors.YELLOW);
+                if(diff < 3 && diff > -1){
+                    System.out.print(ConsoleColors.YELLOW);
+                } else if(diff < 0){
+                    System.out.print(ConsoleColors.RED_BACKGROUND);
+                }
+
+                if(resultSet.getInt("ID") == 0) {
+                    System.out.print(ConsoleColors.RESET);
+                    System.out.print(ConsoleColors.GREEN_BOLD);
                 }
                 System.out.println(resultSet.getString("ID") + " " + resultSet.getString("EndDate") + " " + CategoryID.values()[Integer.parseInt(resultSet.getString("CategoryID")) - 1] + " " + PriorityID.values()[Integer.parseInt(resultSet.getString("PriorityID")) - 1] + " " + DifficultyID.values()[Integer.parseInt(resultSet.getString("DifficultyID")) - 1] + " " + resultSet.getString("Title"));
-                System.out.println(ConsoleColors.RESET);
+                System.out.print(ConsoleColors.RESET);
                 int currentIndex = resultSet.getInt("ID");
-                if (index < currentIndex) {
+                if (index <= currentIndex) {
                     index = currentIndex + 1;
                 }
             }
@@ -105,6 +113,29 @@ public class ToDoListDatabase {
         try{
             Statement statement = connection.createStatement();
             String query = "DELETE FROM ToDoList WHERE ID = " + index + ";";
+            statement.executeUpdate(query);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public static void filterTasks(Connection connection, int choiceCategory) {
+        try{
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM ToDoList WHERE CategoryID = " + choiceCategory + ";";
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                System.out.println(resultSet.getString("ID") + " " + resultSet.getString("EndDate") + " " + CategoryID.values()[Integer.parseInt(resultSet.getString("CategoryID")) - 1] + " " + PriorityID.values()[Integer.parseInt(resultSet.getString("PriorityID")) - 1] + " " + DifficultyID.values()[Integer.parseInt(resultSet.getString("DifficultyID")) - 1] + " " + resultSet.getString("Title"));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void markAsCompleted(Connection connection, int index) {
+        try{
+            Statement statement = connection.createStatement();
+            String query = "UPDATE ToDoList SET ID = " + 0 + " WHERE ID = " + index;
             statement.executeUpdate(query);
         } catch (Exception exception) {
             exception.printStackTrace();
