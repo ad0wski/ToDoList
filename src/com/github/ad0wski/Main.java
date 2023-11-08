@@ -24,16 +24,24 @@ public class Main {
         while (1 == 1) {
             System.out.println("Witaj! Co chcesz zrobić? ");
             System.out.println("1 - wyświetl wszystko");
-            System.out.println("2 - dodaj zadanie");
-            System.out.println("3 - edytuj zadanie");
-            System.out.println("4 - usuń zadanie");
-            System.out.println("5 - filtruj zadania po danej kategorii");
-            System.out.println("6 - oznacz jako zrobione");
-            System.out.println("7 - zakończ");
+            System.out.println("2 - wyświetl konkretny typ zadań");
+            System.out.println("3 - dodaj zadanie");
+            System.out.println("4 - edytuj zadanie");
+            System.out.println("5 - usuń zadanie");
+            System.out.println("6 - filtruj zadania po danej kategorii");
+            System.out.println("7 - oznacz jako zrobione");
+            System.out.println("8 - zakończ");
             int choice = scanner.nextInt();
             if (choice == 1) {
                 ToDoListDatabase.showAllTasks(connection);
-            } else if (choice == 2) {
+
+            }else if(choice == 2) {
+                System.out.println("Jaki typ zadań chcesz wyświetlić: ");
+                System.out.println("1. Do zrobienia \n 2. Bliskie terminu realizacji \n 3. Po terminie \n 4. Zrobione");
+                int taskType = scanner.nextInt();
+                ToDoListDatabase.showSpecificTaskType(connection, taskType);
+
+            } else if (choice == 3) {
                 int index = ToDoListDatabase.showAllTasks(connection);
                 System.out.println("Podaj datę zakończenia zadania: ");
                 String date = scanner.next();
@@ -49,7 +57,7 @@ public class Main {
                 System.out.println("Podaj tytuł zadania: ");
                 String title = scanner.next();
                 ToDoListDatabase.addTask(connection, index, new Task(LocalDate.parse(date), CategoryID.values()[category - 1], PriorityID.values()[priority - 1], DifficultyID.values()[difficulty - 1], title));
-            } else if (choice == 3) {
+            } else if (choice == 4) {
                 System.out.println("Podaj index zadania do edycji: ");
                 int index = scanner.nextInt();
                 Task task = ToDoListDatabase.getSpecificTask(connection, index);
@@ -62,23 +70,23 @@ public class Main {
                     task.setEndDate(LocalDate.parse(newValueField));
                     ToDoListDatabase.editTask(connection, index, task);
                 }
-            } else if (choice == 4) {
+            } else if (choice == 5) {
                 System.out.println("Które zadanie chcesz usunąć? ");
                 int index = scanner.nextInt();
                 ToDoListDatabase.removingTask(connection, index);
 
-            }else if(choice == 5) {
+            }else if(choice == 6) {
                 System.out.println("Wybierz kategorię zadań: ");
                 System.out.println("1. Szkoła \n 2. Hobby \n 3. Dom");
                 int choiceCategory = scanner.nextInt();
                 ToDoListDatabase.filterTasks(connection, choiceCategory);
 
-            }else if(choice == 6) {
+            }else if(choice == 7) {
                 System.out.println("Podaj index zadania, które chcesz oznaczyć jako zrealizowane: ");
                 int index = scanner.nextInt();
                 ToDoListDatabase.markAsCompleted(connection, index);
 
-            } else if (choice == 7) {
+            } else if (choice == 8) {
                 break;
             }
         }

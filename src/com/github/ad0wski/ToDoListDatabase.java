@@ -6,10 +6,12 @@ import com.github.ad0wski.priority.PriorityID;
 import jdk.jshell.Snippet;
 
 import javax.swing.plaf.nimbus.State;
+import java.net.ConnectException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.chrono.MinguoDate;
+import java.util.ArrayList;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -80,6 +82,46 @@ public class ToDoListDatabase {
             throwables.printStackTrace();
         }
         return index;
+    }
+
+    public static void showSpecificTaskType(Connection connection, int choice) {
+        try{
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM ToDoList";
+            ResultSet resultSet = statement.executeQuery(query);
+            ArrayList<Task> tasks = new ArrayList<>();
+            while(resultSet.next()){
+                tasks.add(new Task(resultSet.getInt("ID"), LocalDate.parse(resultSet.getString("EndDate")), CategoryID.values()[resultSet.getInt("CategoryID")-1], PriorityID.values()[resultSet.getInt("PriorityID")-1], DifficultyID.values()[resultSet.getInt("DifficultyID")-1], resultSet.getString("Title")));
+
+            }
+            if(choice == 1){
+                for(Task task:tasks){
+                    LocalDate today = LocalDate.now();
+                    long diff = DAYS.between(today, task.getEndDate());
+                    if(diff > 3 && task.getId() != 0){
+                        System.out.println(task);
+                    }
+                }
+            }
+            if(choice == 2){
+                for (Task task: tasks){
+                    LocalDate today = LocalDate.now();
+                    long diff = DAYS.between(today, task.getEndDate());
+                    if(diff <= 3 && task.getId() != 0 && today.isBefore(task.getEndDate())){
+                        System.out.print(ConsoleColors.YELLOW);
+                        System.out.println(task);
+                    }
+                }
+                System.out.println(ConsoleColors.RESET);
+            }
+
+            if(choice == 3){
+
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public static void editTask(Connection connection, int index, Task task) {

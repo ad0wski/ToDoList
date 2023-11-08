@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 public class Task {
+    private int id;
     private LocalDate endDate;
     private CategoryID categoryID;
     private PriorityID priorityID;
@@ -21,6 +22,23 @@ public class Task {
         this.priorityID = priorityID;
         this.difficultyID = difficultyID;
         this.title = title;
+    }
+
+    public Task(int id, LocalDate endDate, CategoryID categoryID, PriorityID priorityID, DifficultyID difficultyID, String title) {
+        this.id = id;
+        this.endDate = endDate;
+        this.categoryID = categoryID;
+        this.priorityID = priorityID;
+        this.difficultyID = difficultyID;
+        this.title = title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getEndDate() {
@@ -65,12 +83,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "endDate=" + endDate +
-                ", categoryID=" + categoryID +
-                ", priorityID=" + priorityID +
-                ", difficultyID=" + difficultyID +
-                ", title='" + title + '\'' +
-                '}';
+        return id +
+                " " + endDate +
+                " " + categoryID +
+                " " + priorityID +
+                " " + difficultyID +
+                " " + title;
     }
 }
