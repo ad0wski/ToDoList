@@ -1,16 +1,11 @@
 package com.github.ad0wski;
 
-import com.github.ad0wski.category.CategoryID;
-import com.github.ad0wski.difficulty.DifficultyID;
-import com.github.ad0wski.priority.PriorityID;
-import jdk.jshell.Snippet;
+import com.github.ad0wski.attributes.CategoryID;
+import com.github.ad0wski.attributes.DifficultyID;
+import com.github.ad0wski.attributes.PriorityID;
 
-import javax.swing.plaf.nimbus.State;
-import java.net.ConnectException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.chrono.MinguoDate;
 import java.util.ArrayList;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -18,10 +13,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ToDoListDatabase {
     public static Connection createConnection() {
         try {
-            String driver = "com.mysql.jdbc.Driver";
-            String url = "jdbc:mysql://localhost:3306/mysql";
-            String userName = "root";
-            String password = "";
+            final String driver = "com.mysql.jdbc.Driver";
+            final String url = "jdbc:mysql://localhost:3306/mysql";
+            final String userName = "root";
+            final String password = "";
             Class.forName(driver);
             Connection connection = DriverManager.getConnection(url, userName, password);
             System.out.println("Database connected");
@@ -61,13 +56,13 @@ public class ToDoListDatabase {
             while (resultSet.next()) {
                 LocalDate taskDate = LocalDate.parse(resultSet.getString("EndDate"));
                 long diff = DAYS.between(currentDate, taskDate);
-                if(diff < 3 && diff > -1){
+                if (diff < 3 && diff > -1) {
                     System.out.print(ConsoleColors.YELLOW);
-                } else if(diff < 0){
+                } else if (diff < 0) {
                     System.out.print(ConsoleColors.RED_BACKGROUND);
                 }
 
-                if(resultSet.getInt("ID") == 0) {
+                if (resultSet.getInt("ID") == 0) {
                     System.out.print(ConsoleColors.RESET);
                     System.out.print(ConsoleColors.GREEN_BOLD);
                 }
@@ -85,29 +80,28 @@ public class ToDoListDatabase {
     }
 
     public static void showSpecificTaskType(Connection connection, int choice) {
-        try{
+        try {
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM ToDoList";
             ResultSet resultSet = statement.executeQuery(query);
             ArrayList<Task> tasks = new ArrayList<>();
-            while(resultSet.next()){
-                tasks.add(new Task(resultSet.getInt("ID"), LocalDate.parse(resultSet.getString("EndDate")), CategoryID.values()[resultSet.getInt("CategoryID")-1], PriorityID.values()[resultSet.getInt("PriorityID")-1], DifficultyID.values()[resultSet.getInt("DifficultyID")-1], resultSet.getString("Title")));
-
+            while (resultSet.next()) {
+                tasks.add(new Task(resultSet.getInt("ID"), LocalDate.parse(resultSet.getString("EndDate")), CategoryID.values()[resultSet.getInt("CategoryID") - 1], PriorityID.values()[resultSet.getInt("PriorityID") - 1], DifficultyID.values()[resultSet.getInt("DifficultyID") - 1], resultSet.getString("Title")));
             }
-            if(choice == 1){
-                for(Task task:tasks){
+            if (choice == 1) {
+                for (Task task : tasks) {
                     LocalDate today = LocalDate.now();
                     long diff = DAYS.between(today, task.getEndDate());
-                    if(diff > 3 && task.getId() != 0){
+                    if (diff > 3 && task.getId() != 0) {
                         System.out.println(task);
                     }
                 }
             }
-            if(choice == 2){
-                for (Task task: tasks){
+            if (choice == 2) {
+                for (Task task : tasks) {
                     LocalDate today = LocalDate.now();
                     long diff = DAYS.between(today, task.getEndDate());
-                    if(diff <= 3 && task.getId() != 0 && today.isBefore(task.getEndDate())){
+                    if (diff <= 3 && task.getId() != 0 && (today.isBefore(task.getEndDate()) || today.isEqual(task.getEndDate()))) {
                         System.out.print(ConsoleColors.YELLOW);
                         System.out.println(task);
                     }
@@ -115,8 +109,25 @@ public class ToDoListDatabase {
                 System.out.println(ConsoleColors.RESET);
             }
 
-            if(choice == 3){
-
+            if (choice == 3) {
+                for (Task task : tasks) {
+                    LocalDate today = LocalDate.now();
+                    long diff = DAYS.between(today, task.getEndDate());
+                    if (diff < 0 && task.getId() != 0) {
+                        System.out.println(ConsoleColors.RED);
+                        System.out.println(task);
+                    }
+                }
+                System.out.println(ConsoleColors.RESET);
+            }
+            if (choice == 4) {
+                for (Task task : tasks) {
+                    if (task.getId() == 0) {
+                        System.out.println(ConsoleColors.GREEN);
+                        System.out.println(task);
+                    }
+                }
+                System.out.println(ConsoleColors.RESET);
             }
 
         } catch (SQLException throwables) {
@@ -152,7 +163,7 @@ public class ToDoListDatabase {
     }
 
     public static void removingTask(Connection connection, int index) {
-        try{
+        try {
             Statement statement = connection.createStatement();
             String query = "DELETE FROM ToDoList WHERE ID = " + index + ";";
             statement.executeUpdate(query);
@@ -162,11 +173,11 @@ public class ToDoListDatabase {
     }
 
     public static void filterTasks(Connection connection, int choiceCategory) {
-        try{
+        try {
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM ToDoList WHERE CategoryID = " + choiceCategory + ";";
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 System.out.println(resultSet.getString("ID") + " " + resultSet.getString("EndDate") + " " + CategoryID.values()[Integer.parseInt(resultSet.getString("CategoryID")) - 1] + " " + PriorityID.values()[Integer.parseInt(resultSet.getString("PriorityID")) - 1] + " " + DifficultyID.values()[Integer.parseInt(resultSet.getString("DifficultyID")) - 1] + " " + resultSet.getString("Title"));
             }
         } catch (SQLException throwables) {
@@ -175,7 +186,7 @@ public class ToDoListDatabase {
     }
 
     public static void markAsCompleted(Connection connection, int index) {
-        try{
+        try {
             Statement statement = connection.createStatement();
             String query = "UPDATE ToDoList SET ID = " + 0 + " WHERE ID = " + index;
             statement.executeUpdate(query);

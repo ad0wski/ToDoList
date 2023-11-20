@@ -1,4 +1,4 @@
-package com.github.ad0wski.category;
+package com.github.ad0wski.attributes;
 
 public enum CategoryID {
     SCHOOL(1),

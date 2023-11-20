@@ -1,4 +1,4 @@
-package com.github.ad0wski.difficulty;
+package com.github.ad0wski.attributes;
 
 public enum DifficultyID {
     EASY(1),

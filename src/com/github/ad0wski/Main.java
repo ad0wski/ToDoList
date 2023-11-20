@@ -1,13 +1,11 @@
 package com.github.ad0wski;
 
-import com.github.ad0wski.category.Category;
-import com.github.ad0wski.category.CategoryID;
-import com.github.ad0wski.difficulty.DifficultyID;
-import com.github.ad0wski.priority.PriorityID;
+import com.github.ad0wski.attributes.CategoryID;
+import com.github.ad0wski.attributes.DifficultyID;
+import com.github.ad0wski.attributes.PriorityID;
 
 import java.sql.Connection;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.Scanner;
 
 public class Main {

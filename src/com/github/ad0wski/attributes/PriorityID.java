@@ -1,4 +1,4 @@
-package com.github.ad0wski.priority;
+package com.github.ad0wski.attributes;
 
 public enum PriorityID {
     LOW(1),
